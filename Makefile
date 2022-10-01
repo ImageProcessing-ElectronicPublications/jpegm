@@ -1,29 +1,41 @@
 CFLAGS+=-std=c99 -pedantic -Wall -Wextra -march=native -O3 -D_XOPEN_SOURCE -D_GNU_SOURCE -g
 LDFLAGS+=-rdynamic
 LDLIBS+=-lm
-BINS=decoder encoder
+BINS= jpegmenc jpegmdec
+LIBJPG= libjpegm.a
 BINDIR?=$(DESTDIR)$(PREFIX)/usr/bin
 
 CFLAGS+=$(EXTRA_CFLAGS)
 LDFLAGS+=$(EXTRA_LDFLAGS)
 LDLIBS+=$(EXTRA_LDLIBS)
 
-.PHONY: all
+AR=ar
+INSTALL=install
+RM=rm
+
+OBJLIB= src/common.o src/io.o src/huffman.o src/coeffs.o src/imgproc.o src/frame.o
+OBJENC= src/encoder.o
+OBJDEC= src/decoder.o
+
+.PHONY: all clean distclean install
+
 all: $(BINS)
 
-.PHONY: clean
 clean:
-	$(RM) -- $(BINS) *.o
+	$(RM) -- $(BINS) $(LIBJPG) $(OBJLIB) $(OBJENC) $(OBJDEC)
 
-.PHONY: distclean
 distclean: clean
 	$(RM) -- *.gcda
 
-decoder: decoder.o common.o io.o huffman.o coeffs.o imgproc.o frame.o
+$(LIBJPG): $(OBJLIB)
+	$(AR) crs $@ $^
 
-encoder: encoder.o common.o io.o huffman.o coeffs.o imgproc.o frame.o
+jpegmenc: $(OBJENC) $(LIBJPG)
+	$(CC) $(CFLAGS) $^ $(LDFLAGS) $(LDLIBS) -o $@
 
-.PHONY: install
+jpegmdec: $(OBJDEC) $(LIBJPG)
+	$(CC) $(CFLAGS) $^ $(LDFLAGS) $(LDLIBS) -o $@
+
 install: all
-	install -d $(BINDIR)
-	install -m 755 $(BINS) $(BINDIR)
+	$(INSTALL) -d $(BINDIR)
+	$(INSTALL) -m 755 $(BINS) $(BINDIR)

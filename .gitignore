@@ -1,5 +1,6 @@
-decoder
-encoder
+jpegdec
+jpegenc
+libjpegm.a
 *.jpg
 *.jpeg
 *.JPG

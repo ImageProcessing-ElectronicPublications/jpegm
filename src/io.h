@@ -4,10 +4,11 @@
 #include <stdio.h>
 #include <stdint.h>
 
-struct bits {
-	uint8_t byte;
-	size_t count;
-	FILE *stream;
+struct bits
+{
+    uint8_t byte;
+    size_t count;
+    FILE *stream;
 };
 
 int init_bits(struct bits *bits, FILE *stream);

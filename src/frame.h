@@ -5,13 +5,14 @@
 #include <stdint.h>
 #include "common.h"
 
-struct frame {
-	uint8_t components;
-	uint16_t Y, X;
-	size_t size_x, size_y;
-	uint8_t precision;
+struct frame
+{
+    uint8_t components;
+    uint16_t Y, X;
+    size_t size_x, size_y;
+    uint8_t precision;
 
-	float *data;
+    float *data;
 };
 
 int frame_create(struct context *context, struct frame *frame);

@@ -8,9 +8,10 @@
 
 /* represents Huffman code
  */
-struct vlc {
-	uint16_t code;
-	size_t size;
+struct vlc
+{
+    uint16_t code;
+    size_t size;
 };
 
 int init_vlc(struct vlc *vlc);
